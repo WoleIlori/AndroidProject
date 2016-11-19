@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
@@ -78,7 +79,7 @@ public class DatabaseManager {
 
         qb.setTables(sqlTables);
 
-        Cursor c = qb.query(db,
+        Cursor b = qb.query(db,
                 projection,
                 selection,
                 selectionArgs,
@@ -86,60 +87,60 @@ public class DatabaseManager {
                 null,
                 null
                 );
-        return c;
+        return b;
     }
 
 
-    public Cursor getLandmarksByCountry(String countryname){
+    public Cursor getLandmarksByCountry(String country){
         int countryId;
-        countryId = getCountryId(countryname);
+        countryId = getCountryId(country);
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] projection =new String[]{COLUMN_LANDMARKID,COLUMN_LANDMARKNAME,COLUMN_CITY,COLUMN_COUNTRY_ID,COLUMN_DESC};
         String sqlTables = TABLE_LANDMARK;
-        String selection = COLUMN_COUNTRY_ID + " = " + countryId;
-       //String selectionArgs = "" + countryId;
+        String selection = COLUMN_COUNTRY_ID + "=?";
+        String[] selectionArgs = {String.valueOf(countryId)};
 
         qb.setTables(sqlTables);
-
         Cursor c = qb.query(db,
                 projection,
                 selection,
-                null,//selectionArgs
+                selectionArgs,//selectionArgs
                 null,
                 null,
                 null);
-
+        Log.e("QUERY","query completed");
         return c;
 
     }
 
-    public int getCountryId(String name){
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+    public int getCountryId(String country){
 
-        String[] allCountry =new String[]{COLUMN_COUNTRYID, COLUMN_COUNTRYNAME};
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] Country = new String[]{COLUMN_COUNTRYID, COLUMN_COUNTRYNAME};
         String sqlTables = TABLE_COUNTRY;
-        String selection = COLUMN_COUNTRYNAME + " = ?";
-        String[] selectionArgs = {name};
+        String selection = COLUMN_COUNTRYNAME + "=?";
+        String[] selectionArgs = {country};
+        int id=0;
 
         qb.setTables(sqlTables);
 
-        Cursor c = qb.query(db,
-                allCountry,
+        Cursor d = qb.query(db,
+                Country,
                 selection,
-                selectionArgs,
+                selectionArgs,//selectionArgs
                 null,
                 null,
                 null);
-
-        c.moveToFirst();
-        return c.getInt(c.getColumnIndexOrThrow(COLUMN_COUNTRYID));
-
+        if(d.getCount() > 0) {
+            d.moveToFirst();
+            id = d.getInt(0);
+        }
+        else{
+            Log.e("Cursor", "Result not shown");
+        }
+        return id;
     }
 
-
-
-
-    /*
     public Cursor getAllLandmarks()
     {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -158,7 +159,6 @@ public class DatabaseManager {
                 null);
         return c;
     }
-    */
 
     public DatabaseManager open() throws SQLException{
         db = DBHelper.getWritableDatabase();

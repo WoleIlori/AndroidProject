@@ -11,63 +11,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static java.security.AccessController.getContext;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private Cursor cursor;
-    private DatabaseManager mydb;
-    ListView lv;
-    TextView tv;
+    Button searchBtn;
+    //TextView search;
+    //EditText text;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //access the database
-        mydb = new DatabaseManager(this);
-        mydb.open();
-
-        cursor = mydb.getAllCountry();
-
-
-        String[] from = new String[]{DatabaseManager.COLUMN_COUNTRYNAME};
-
-        int[] to = new int[]{R.id.countryname};
-
-        ListAdapter adapter = new SimpleCursorAdapter(this, R.layout.country_row,cursor,from,to,0);//R.layout.landmark_row
-        lv = getListView();
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                tv = (TextView)findViewById(R.id.countryname);
-                String country_val = tv.getText().toString();
-                //send landmark selected landmark to new  activity
-                Intent intent = new Intent(getApplicationContext(),landmarkActivity.class);
-                intent.putExtra("LandmarkName",country_val);
+        searchBtn = (Button)findViewById(R.id.btn);
+        searchBtn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                Intent intent = new Intent(MainActivity.this,countryActivity.class);
                 startActivity(intent);
             }
         });
-
-
-
     }
 
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        cursor.close();
-    }
+
 
 
 
