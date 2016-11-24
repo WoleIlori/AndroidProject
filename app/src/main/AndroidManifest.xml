@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".countryActivity"></activity>
         <activity android:name=".landmarkActivity"></activity>
+        <activity android:name=".displayActivity"></activity>
     </application>
 
 </manifest>

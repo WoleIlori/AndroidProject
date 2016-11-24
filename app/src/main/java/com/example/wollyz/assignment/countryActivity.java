@@ -31,6 +31,7 @@ public class countryActivity extends ListActivity {
         //
         cursor.moveToFirst();
 
+
         //
         while (cursor.isAfterLast() == false)
         {

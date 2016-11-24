@@ -2,10 +2,13 @@ package com.example.wollyz.assignment;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
@@ -15,7 +18,6 @@ import java.util.ArrayList;
  */
 public class landmarkActivity extends ListActivity {
     private Cursor cursor;
-    private Cursor allLandmarks;
     ArrayList<String> landmarks = new ArrayList<String>();
     private DatabaseManager db;
     int[] imgid;
@@ -86,6 +88,18 @@ public class landmarkActivity extends ListActivity {
         CustomArrayAdapter adapter = new CustomArrayAdapter(this,landmarks ,imgid);
         getListView().setAdapter(adapter);
 
+    }
+
+    protected void onListItemClick(ListView l, View v, int position, long id)
+    {
+        super.onListItemClick(l, v, position, id);
+        String select = l.getItemAtPosition(position).toString();
+        Intent intent = new Intent(getApplicationContext(), displayActivity.class);
+        intent.putExtra("Selected_Landmark", select);
+        intent.putExtra("position", position);
+        intent.putExtra("image", imgid);
+        startActivity(intent);
 
     }
+
 }
