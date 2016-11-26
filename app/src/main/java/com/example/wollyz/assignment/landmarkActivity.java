@@ -25,7 +25,7 @@ public class landmarkActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_landmark);
+        //setContentView(R.layout.activity_landmark);
         Bundle var = getIntent().getExtras();
         String name = var.getString("LandmarkName");
 
@@ -95,8 +95,8 @@ public class landmarkActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
         String select = l.getItemAtPosition(position).toString();
         Intent intent = new Intent(getApplicationContext(), displayActivity.class);
-        intent.putExtra("Selected_Landmark", select);
-        intent.putExtra("position", position);
+        //intent.putExtra("Selected_Landmark", select);
+        //intent.putExtra("position", position);
         intent.putExtra("image", imgid);
         startActivity(intent);
 

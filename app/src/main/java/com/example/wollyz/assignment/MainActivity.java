@@ -26,9 +26,13 @@ import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button searchBtn;
+    Button landmarkBtn;
+    Button countryBtn;
+    Button myListBtn;
+
     //TextView search;
-    //EditText text;
+    EditText searchTxt;
+    String input;
 
 
 
@@ -36,14 +40,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        searchBtn = (Button)findViewById(R.id.btn);
-        searchBtn.setOnClickListener(new View.OnClickListener()
+        searchTxt = (EditText)findViewById(R.id.inputtext);
+
+        landmarkBtn = (Button)findViewById(R.id.btn);
+        /*
+        landmarkBtn.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
-                Intent intent = new Intent(MainActivity.this,countryActivity.class);
+                input = searchTxt.getText().toString();
+                Intent intent = new Intent(getApplicationContext(),LandmarkPageActivity.class);
+                intent.putExtra("landmark", input);
                 startActivity(intent);
             }
         });
+        */
+
+        countryBtn = (Button)findViewById(R.id.CountryBtn);
+        countryBtn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                Intent countryintent = new Intent(getApplicationContext(),countryActivity.class);
+                startActivity(countryintent);
+            }
+        });
+
+        myListBtn = (Button)findViewById(R.id.ListBtn);
+        myListBtn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                Intent listintent = new Intent(getApplicationContext(),myListActivity.class);
+                startActivity(listintent);
+            }
+        });
+
+
+
     }
 
 

@@ -48,7 +48,6 @@ public class DatabaseManager {
 
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
-            //setForcedUpgrade();
         }
 
     }
@@ -71,7 +70,7 @@ public class DatabaseManager {
         return c;
     }
 
-    public Cursor getLandmarkByName(String name) {
+    public String getLandmarkByName(String name) {
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] projection = new String[]{COLUMN_LANDMARKID, COLUMN_LANDMARKNAME, COLUMN_CITY, COLUMN_COUNTRY_ID, COLUMN_DESC};
@@ -89,7 +88,15 @@ public class DatabaseManager {
                 null,
                 null
         );
-        return b;
+        if(b.getCount()> 0)
+        {
+            b.moveToFirst();
+        }
+        else
+        {
+            Log.e("Cursor", "Result not shown");
+        }
+        return b.getString(1);
     }
 
 
@@ -168,12 +175,14 @@ public class DatabaseManager {
     //display landmarks from List
     public String[] getListLandmark() {
 
+        //get ids of landmarks in list table
         int[] landmarkIds = getLandmarksById();
+
         String[] landmarknames = new String[landmarkIds.length];
 
         for(int i=0; i< landmarknames.length; i++)
         {
-            Cursor c =  db.rawQuery("select landmark_name from Landmark "+ "where _id = "+ landmarkIds[i], null);
+            Cursor c =  db.rawQuery("select landmark_name from Landmark "+ "where _id = "+ String.valueOf(landmarkIds[i]), null);
             c.moveToFirst();
             landmarknames[i] = c.getString(0);
         }
@@ -245,8 +254,50 @@ public class DatabaseManager {
                 null);
     }
 
+    public void addLandmarkToVisit(String name){
+        int Lid = getLandmarkId(name);
 
+        //update status of landmark
+        ContentValues val = new ContentValues();
+        val.put(COLUMN_VISITSTATUS, "Y");
 
+        //update row where the id is equal to landmarkid
+        String where = COLUMN_lANDMARK_ID + " LIKE ? ";
+        String[] whereArgs = {String.valueOf(Lid)};
 
+        int count = db.update(
+                TABLE_LIST,
+                val,
+                where,
+                whereArgs);
+
+    }
+
+    public void deleteLandmark(String name){
+        //get Id of landmark
+        int lId = getLandmarkId(name);
+
+        String where = COLUMN_lANDMARK_ID + " LIKE ? ";
+        String[] whereArgs = {String.valueOf(lId)};
+        db.delete(TABLE_LIST, where, whereArgs);
+
+    }
+
+    public Cursor getAllLandmarks()
+    {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] Landmark = new String[]{COLUMN_LANDMARKID,COLUMN_LANDMARKNAME,COLUMN_CITY,COLUMN_COUNTRY_ID,COLUMN_DESC};
+        String sqlTables = TABLE_LANDMARK;
+
+        qb.setTables(sqlTables);
+
+        return qb.query(db,
+                Landmark,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
 
 }
