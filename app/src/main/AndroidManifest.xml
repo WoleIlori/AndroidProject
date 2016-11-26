@@ -20,6 +20,7 @@
         <activity android:name=".displayActivity"></activity>
         <activity android:name=".LandmarkPageActivity"></activity>
         <activity android:name=".myListActivity"></activity>
+        <activity android:name=".modifyListActivity"></activity>
     </application>
 
 </manifest>

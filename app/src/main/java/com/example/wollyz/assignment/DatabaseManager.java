@@ -218,7 +218,6 @@ public class DatabaseManager {
             d.moveToFirst();
             landmarknames[i] = d.getString(1);
         }
-        Log.e("Query","Insert Completed");
         return landmarknames;
 
     }
@@ -269,7 +268,7 @@ public class DatabaseManager {
                 null);
     }
 
-    public void addLandmarkToVisit(String name){
+    public void updateList(String name){
         int Lid = getLandmarkId(name);
 
         //update status of landmark
@@ -285,7 +284,7 @@ public class DatabaseManager {
                 val,
                 where,
                 whereArgs);
-
+        Log.e("Query","Update Completed");
     }
 
     public void deleteLandmark(String name){
@@ -295,6 +294,7 @@ public class DatabaseManager {
         String where = COLUMN_lANDMARK_ID + " LIKE ? ";
         String[] whereArgs = {String.valueOf(lId)};
         db.delete(TABLE_LIST, where, whereArgs);
+        Log.e("Query","Delete Completed");
 
     }
 
