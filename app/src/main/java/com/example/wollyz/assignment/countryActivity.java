@@ -21,7 +21,6 @@ public class countryActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_country);
         mydb = new DatabaseManager(this);
         mydb.open();
 
@@ -40,7 +39,7 @@ public class countryActivity extends ListActivity {
         }
 
         setListAdapter(
-                new ArrayAdapter<String>(this, R.layout.country_row, R.id.countryname, countries)
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, countries)
         );
     }
 

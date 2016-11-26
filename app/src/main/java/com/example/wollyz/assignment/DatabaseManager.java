@@ -171,43 +171,9 @@ public class DatabaseManager {
 
     }
 
-
-    //display landmarks from List
-    public String[] getListLandmark() {
-
-        //get ids of landmarks in list table
-        int[] landmarkIds = getLandmarksById();
-
-        String[] landmarknames = new String[landmarkIds.length];
-
-        for(int i=0; i< landmarknames.length; i++)
-        {
-            Cursor c =  db.rawQuery("select landmark_name from Landmark "+ "where _id = "+ String.valueOf(landmarkIds[i]), null);
-            c.moveToFirst();
-            landmarknames[i] = c.getString(0);
-        }
-        return landmarknames;
-
-    }
-
-    //return all the ids of landmarks in ListTable
-    private int[] getLandmarksById()
-    {
-        Cursor c = db.rawQuery("Select _id from List", null);
-        int[]listIds = new int[c.getCount()];
-        int i = 0;
-        c.moveToFirst();
-        while(c.moveToNext()){
-            listIds[i] = c.getInt(0);
-        }
-        return listIds;
-    }
-
-    //retturn id of the landmark
+    //return id of selected landmark
     private int getLandmarkId(String name)
     {
-        Cursor d = db.rawQuery("Select _id from Landmark "+ "where landmark_name = " + name, null);
-        /*
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] Landmark = new String[]{COLUMN_LANDMARKID,COLUMN_LANDMARKNAME,COLUMN_CITY,COLUMN_COUNTRY_ID,COLUMN_DESC};
         String sqlTables = TABLE_LANDMARK;
@@ -223,17 +189,64 @@ public class DatabaseManager {
                 null,
                 null,
                 null);
-        if(d.getCount() > 0) {
-            d.moveToFirst();
-            landmarkId = d.getInt(0);
-        }
-        else{
-            Log.e("Cursor", "Result not shown");
-        }
-        */
         d.moveToFirst();
         return d.getInt(0);
     }
+
+
+    //display landmarks from List
+    public String[] getListLandmark() {
+
+        //get ids of landmarks in list table
+        int[] landmarkIds = getLandmarksById();
+        String[] landmarknames = new String[landmarkIds.length];
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] projection = new String[]{COLUMN_LANDMARKID, COLUMN_LANDMARKNAME, COLUMN_CITY, COLUMN_COUNTRY_ID, COLUMN_DESC};
+        String sqlTables = TABLE_LANDMARK;
+        qb.setTables(sqlTables);
+
+        for(int i=0; i< landmarknames.length; i++)
+        {
+            Cursor d = qb.query(db,
+                    projection,
+                    COLUMN_LANDMARKID + " = " + String.valueOf(landmarkIds[i]),
+                    null,//selectionArgs
+                    null,
+                    null,
+                    null);
+            d.moveToFirst();
+            landmarknames[i] = d.getString(0);
+        }
+        return landmarknames;
+
+    }
+
+    //return all the ids of landmarks in ListTable
+    private int[] getLandmarksById()
+    {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] listLandmark = new String[]{COLUMN_lANDMARK_ID,COLUMN_VISITSTATUS,COLUMN_VISITDATE};
+        String sqlTables = TABLE_LIST;
+        qb.setTables(sqlTables);
+        Cursor d = qb.query(db,
+                listLandmark,
+                null,
+                null,
+                null,
+                null,
+                null);
+
+        int[]listIds = new int[d.getCount()];
+        int i = 0;
+        d.moveToFirst();
+        while(!d.isAfterLast()){
+            listIds[i] = d.getInt(0);
+            i++;
+            d.moveToNext();
+        }
+        return listIds;
+    }
+
 
 
     public Cursor getLandmarkContents(String landmark){

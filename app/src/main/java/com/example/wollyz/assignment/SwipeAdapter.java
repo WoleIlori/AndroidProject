@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
  * Created by Wollyz on 25/11/2016.
@@ -18,11 +21,16 @@ public class SwipeAdapter extends PagerAdapter {
     //pass resourceid of the image
     private int[] image_resource;
     private Context ctx;
+    private ArrayList<String> name = new ArrayList<>();
     private LayoutInflater layoutInflater;
+    private DatabaseManager db;
 
-    public SwipeAdapter(Context ctx, int[] imgid){
+    public SwipeAdapter(Context ctx, int[] imgid, ArrayList<String> name){
         this.ctx = ctx;
+        db = new DatabaseManager(ctx);
         image_resource = imgid;
+        this.name = name;
+
     }
     @Override
     public int getCount() {
@@ -36,12 +44,21 @@ public class SwipeAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
+        db.open();
         layoutInflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View item_view =  layoutInflater.inflate(R.layout.swipe_layout, container,false);
+        TextView textView = (TextView)item_view.findViewById(R.id.textview);
         ImageView imageView = (ImageView)item_view.findViewById(R.id.image);
-        //6Button button = (Button)item_view.findViewById(R.id.AddBtn);
+        textView.setText(name.get(position));
         imageView.setImageResource(image_resource[position]);
+        Button button = (Button)item_view.findViewById(R.id.AddBtn);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                db.addLandmarkToList(name.get(position));
+            }
+        });
         container.addView(item_view);
         return item_view;
     }

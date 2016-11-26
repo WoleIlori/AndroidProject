@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         myListBtn = (Button)findViewById(R.id.ListBtn);
+
         myListBtn.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
@@ -76,10 +77,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-
 }
