@@ -18,7 +18,6 @@ public class myListActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mylist);
         mydb = new DatabaseManager(this);
         mydb.open();
 

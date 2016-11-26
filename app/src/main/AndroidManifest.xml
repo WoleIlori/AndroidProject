@@ -19,6 +19,7 @@
         <activity android:name=".landmarkActivity"></activity>
         <activity android:name=".displayActivity"></activity>
         <activity android:name=".LandmarkPageActivity"></activity>
+        <activity android:name=".myListActivity"></activity>
     </application>
 
 </manifest>

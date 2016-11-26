@@ -169,6 +169,7 @@ public class DatabaseManager {
         values.put(COLUMN_VISITSTATUS, status);
         long newRowId = db.insert(TABLE_LIST, null, values);
 
+
     }
 
     //return id of selected landmark
@@ -215,8 +216,9 @@ public class DatabaseManager {
                     null,
                     null);
             d.moveToFirst();
-            landmarknames[i] = d.getString(0);
+            landmarknames[i] = d.getString(1);
         }
+        Log.e("Query","Insert Completed");
         return landmarknames;
 
     }
