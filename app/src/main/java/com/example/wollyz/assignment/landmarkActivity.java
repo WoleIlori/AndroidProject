@@ -96,7 +96,7 @@ public class landmarkActivity extends ListActivity {
         //String select = l.getItemAtPosition(position).toString();
         Intent intent = new Intent(getApplicationContext(), displayActivity.class);
         //intent.putExtra("Selected_Landmark", select);
-        //intent.putExtra("position", position);
+        intent.putExtra("position", position);
         intent.putExtra("landmarks", landmarks);
         intent.putExtra("image", imgid);
         startActivity(intent);

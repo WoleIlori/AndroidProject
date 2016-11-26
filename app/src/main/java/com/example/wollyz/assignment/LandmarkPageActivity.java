@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,14 +16,11 @@ import java.util.ArrayList;
  * Created by Wollyz on 25/11/2016.
  */
 public class LandmarkPageActivity extends Activity {
-    //Button addBtn;
-    ImageView landmark_pic;
     //TextView title;
-    Cursor cursor;
+    private Cursor cursor;
     private DatabaseManager db;
-    int position = 0;
-    String name;
-    int[] imageid = new int[]{
+    private String name;
+    private int[] imageid = new int[]{
             R.drawable.great_wall_of_china,
             R.drawable.forbidden_city,
             R.drawable.terracotta_army,
@@ -35,7 +33,6 @@ public class LandmarkPageActivity extends Activity {
             R.drawable.pyramids_of_giza
     };
     String[] allLandmarks = new String[imageid.length];
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +41,8 @@ public class LandmarkPageActivity extends Activity {
         db = new DatabaseManager(this);
         db.open();
 
-        landmark_pic = (ImageView)findViewById(R.id.image_view);
-        //addBtn = (Button)findViewById(R.id.Button);
+        ImageView landmark_pic = (ImageView)findViewById(R.id.image_view);
+        Button addBtn = (Button)findViewById(R.id.Button);
         //title = (TextView)findViewById(R.id.text);
         Bundle b = getIntent().getExtras();
         name = b.getString("landmark");
@@ -55,14 +52,29 @@ public class LandmarkPageActivity extends Activity {
         */
         cursor = db.getAllLandmarks();
         cursor.moveToFirst();
-        for(int i = 0; i<allLandmarks.length; i++)
+        int i=0;
+        while(!cursor.isAfterLast())
         {
-            while(!cursor.isAfterLast())
+            allLandmarks[i] =  cursor.getString(1);
+            cursor.moveToNext();
+            i++;
+        }
+
+        for(i = 0; i <allLandmarks.length; i++)
+        {
+            if(name.matches(allLandmarks[i]))
             {
-                allLandmarks[i] =  cursor.getString(1);
-                cursor.moveToNext();
+                landmark_pic.setImageResource(imageid[i]);
             }
         }
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.addLandmarkToList(name);
+                finish();
+
+            }
+        });
 
 
     }

@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         searchTxt = (EditText)findViewById(R.id.inputtext);
 
         landmarkBtn = (Button)findViewById(R.id.btn);
-        /*
         landmarkBtn.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        */
+
 
         countryBtn = (Button)findViewById(R.id.CountryBtn);
         countryBtn.setOnClickListener(new View.OnClickListener()
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         myListBtn = (Button)findViewById(R.id.ListBtn);
-
         myListBtn.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v){

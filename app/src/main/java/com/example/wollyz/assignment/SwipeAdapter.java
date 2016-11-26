@@ -31,6 +31,7 @@ public class SwipeAdapter extends PagerAdapter {
         image_resource = imgid;
         this.name = name;
 
+
     }
     @Override
     public int getCount() {

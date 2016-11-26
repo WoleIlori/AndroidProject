@@ -47,7 +47,7 @@ public class countryActivity extends ListActivity {
     {
         super.onListItemClick(l, v, position, id);
         String select = l.getItemAtPosition(position).toString();
-        Intent intent = new Intent(getApplicationContext(), landmarkActivity.class);
+        Intent intent = new Intent(getApplicationContext(), displayActivity.class);
         intent.putExtra("LandmarkName", select);
         startActivity(intent);
     }

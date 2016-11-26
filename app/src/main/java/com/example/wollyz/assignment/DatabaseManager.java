@@ -315,4 +315,23 @@ public class DatabaseManager {
                 null);
     }
 
+    public String getLandmarkStatus(String name)
+    {
+        int Lid = getLandmarkId(name);
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] listLandmark = new String[]{COLUMN_lANDMARK_ID,COLUMN_VISITSTATUS,COLUMN_VISITDATE};
+        String sqlTables = TABLE_LIST;
+        String where = COLUMN_lANDMARK_ID + " = " + String.valueOf(Lid);
+        qb.setTables(sqlTables);
+        Cursor d = qb.query(db,
+                listLandmark,
+                where,
+                null,
+                null,
+                null,
+                null);
+        d.moveToFirst();
+        return d.getString(1);
+    }
+
 }
