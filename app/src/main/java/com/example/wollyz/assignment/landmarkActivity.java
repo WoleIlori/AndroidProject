@@ -18,89 +18,59 @@ import java.util.ArrayList;
  */
 public class landmarkActivity extends ListActivity {
     private Cursor cursor;
-    ArrayList<String> landmarks = new ArrayList<String>();
     private DatabaseManager db;
-    int[] imgid;
+    String[] visitedLandmark;
+
+    private int[] imageid = new int[]{//the r.drawable of all the landmarks
+            R.drawable.great_wall_of_china,
+            R.drawable.forbidden_city,
+            R.drawable.terracotta_army,
+            R.drawable.colosseum,
+            R.drawable.sistine_chapel,
+            R.drawable.white_house,
+            R.drawable.eiffel_tower,
+            R.drawable.arc_de_triomphe,
+            R.drawable.the_great_sphinx,
+            R.drawable.pyramids_of_giza
+    };
+    String[] allLandmarks = new String[imageid.length];
+    int[] visitedImage;
 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_landmark);
-        Bundle var = getIntent().getExtras();
-        String name = var.getString("LandmarkName");
-
-        switch(name){
-            case "China":
-            {
-                imgid = new int[]{
-                        R.drawable.great_wall_of_china,
-                        R.drawable.forbidden_city,
-                        R.drawable.terracotta_army};
-                break;
-            }
-
-            case "Italy": {
-                imgid = new int[]{
-                        R.drawable.colosseum,
-                        R.drawable.sistine_chapel,
-                };
-                break;
-            }
-
-            case "America":
-            {
-                imgid = new int[]{
-                        R.drawable.white_house
-                };
-                break;
-            }
-
-            case "France":{
-                imgid = new int[]{
-                        R.drawable.eiffel_tower,
-                        R.drawable.arc_de_triomphe
-                };
-                break;
-            }
-
-            case "Egypt":{
-                imgid = new int[]{
-                        R.drawable.the_great_sphinx,
-                        R.drawable.pyramids_of_giza
-                };
-                break;
-            }
-
-
-        }//end switch
-
-
         db = new DatabaseManager(this);
         db.open();
-        cursor = db.getLandmarksByCountry(name);
+
+        visitedLandmark = db.getLandmarksVisited();
+
+        //put all landmarks in array
+        cursor = db.getAllLandmarks();
         cursor.moveToFirst();
-
-        while(cursor.isAfterLast()==false)
+        int i=0;
+        while(!cursor.isAfterLast())
         {
-            landmarks.add(cursor.getString(1));
+            allLandmarks[i] =  cursor.getString(1);
             cursor.moveToNext();
+            i++;
         }
-        CustomArrayAdapter adapter = new CustomArrayAdapter(this,landmarks ,imgid);
+
+        // Store the r.drawable for visited landmarks
+        for(i = 0; i <visitedLandmark.length; i++)
+        {
+           for(int j=0; j<allLandmarks.length; j++)
+           {
+               if(visitedLandmark[i].matches(allLandmarks[j]))
+               {
+                   visitedImage[i]=imageid[j];
+               }
+           }
+        }
+
+        //display the image beside the name of landmarks visited
+        CustomArrayAdapter adapter = new CustomArrayAdapter(this,visitedLandmark ,visitedImage);
         getListView().setAdapter(adapter);
-
     }
 
-    protected void onListItemClick(ListView l, View v, int position, long id)
-    {
-        super.onListItemClick(l, v, position, id);
-        //String select = l.getItemAtPosition(position).toString();
-        Intent intent = new Intent(getApplicationContext(), displayActivity.class);
-        //intent.putExtra("Selected_Landmark", select);
-        intent.putExtra("position", position);
-        intent.putExtra("landmarks", landmarks);
-        intent.putExtra("image", imgid);
-        startActivity(intent);
-
-    }
 
 }

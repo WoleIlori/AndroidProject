@@ -20,12 +20,12 @@ public class myListActivity extends ListActivity {
     private String[] selLandmark;
     private DatabaseManager mydb;
     private String select;
-    //ImageView tick;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mydb = new DatabaseManager(this);
         mydb.open();
-        selLandmark = mydb.getListLandmark();
+        selLandmark = mydb.getLandmarksNotVisited();
         setListAdapter(
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, selLandmark)
         );
@@ -51,7 +51,7 @@ public class myListActivity extends ListActivity {
 
     public void updateData()
     {
-        selLandmark = mydb.getListLandmark();
+        selLandmark = mydb.getLandmarksNotVisited();
         setListAdapter(
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, selLandmark)
         );

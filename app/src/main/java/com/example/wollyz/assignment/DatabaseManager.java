@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -100,8 +101,11 @@ public class DatabaseManager {
     }
 
 
+    //return the names of landmark that are in the country passed as an argument
     public Cursor getLandmarksByCountry(String country) {
         int countryId;
+
+        //implementing join- get id of country and select landmarks that contain the id of that country
         countryId = getCountryId(country);
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] projection = new String[]{COLUMN_LANDMARKID, COLUMN_LANDMARKNAME, COLUMN_CITY, COLUMN_COUNTRY_ID, COLUMN_DESC};
@@ -121,6 +125,7 @@ public class DatabaseManager {
 
     }
 
+    //get id of Country from Country Table
     private int getCountryId(String country) {
 
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
@@ -158,6 +163,7 @@ public class DatabaseManager {
     }
 
 
+    //add Landmark to List Table
     public void addLandmarkToList(String name) {
         //get landmark id
         int lId = getLandmarkId(name);
@@ -195,11 +201,89 @@ public class DatabaseManager {
     }
 
 
-    //display landmarks from List
-    public String[] getListLandmark() {
+    //display landmarks that are not visited from ListTable
+    public String[] getLandmarksNotVisited() {
 
         //get ids of landmarks in list table
-        int[] landmarkIds = getLandmarksById();
+        int[] landmarkIds = getLandmarksNotVisitedId();
+        String[] landmarknames = new String[landmarkIds.length];
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] projection = new String[]{COLUMN_LANDMARKID, COLUMN_LANDMARKNAME, COLUMN_CITY, COLUMN_COUNTRY_ID, COLUMN_DESC};
+        String sqlTables = TABLE_LANDMARK;
+        qb.setTables(sqlTables);
+
+        //get the name of each landmark and add to array
+        for(int i=0; i< landmarknames.length; i++)
+        {
+            Cursor d = qb.query(db,
+                    projection,
+                    COLUMN_LANDMARKID + " = " + String.valueOf(landmarkIds[i]),
+                    null,//selectionArgs
+                    null,
+                    null,
+                    null);
+            d.moveToFirst();
+            landmarknames[i] = d.getString(1);
+        }
+        return landmarknames;
+
+    }
+
+    //return ids of landmarks not visited from ListTable
+    //i.e. Landmarks whose visit_status is N
+    private int[] getLandmarksNotVisitedId()
+    {
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] listLandmark = new String[]{COLUMN_lANDMARK_ID,COLUMN_VISITSTATUS,COLUMN_VISITDATE};
+        String sqlTables = TABLE_LIST;
+        String where = COLUMN_VISITSTATUS + "=?";
+        String[] whereArgs = {"N"};
+        qb.setTables(sqlTables);
+        Cursor d = qb.query(db,
+                listLandmark,
+                where,
+                whereArgs,
+                null,
+                null,
+                null);
+
+        int[]listIds = new int[d.getCount()];
+        int i = 0;
+        d.moveToFirst();
+        while(!d.isAfterLast()){
+            listIds[i] = d.getInt(0);
+            i++;
+            d.moveToNext();
+        }
+        return listIds;
+    }
+
+
+    //return description of landmarks
+    public Cursor getLandmarkContents(String landmark){
+        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+        String[] Landmark = new String[]{COLUMN_LANDMARKID,COLUMN_LANDMARKNAME,COLUMN_CITY,COLUMN_COUNTRY_ID,COLUMN_DESC};
+        String sqlTables = TABLE_LANDMARK;
+        String selection = COLUMN_LANDMARKNAME + "=?";
+        String[] selectionArgs = {landmark};
+
+        qb.setTables(sqlTables);
+
+        return qb.query(db,
+                Landmark,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+    }
+
+    //return names of landmarks visited
+    //i.e. Landmarks whose visit_status is Y
+    public String[] getLandmarksVisited() {
+
+        //get ids of landmarks in list table
+        int[] landmarkIds = getLandmarksVisitedId();
         String[] landmarknames = new String[landmarkIds.length];
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] projection = new String[]{COLUMN_LANDMARKID, COLUMN_LANDMARKNAME, COLUMN_CITY, COLUMN_COUNTRY_ID, COLUMN_DESC};
@@ -222,17 +306,19 @@ public class DatabaseManager {
 
     }
 
-    //return all the ids of landmarks in ListTable
-    private int[] getLandmarksById()
+    //return the ids of visited landmarks from ListTable
+    private int[] getLandmarksVisitedId()
     {
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
         String[] listLandmark = new String[]{COLUMN_lANDMARK_ID,COLUMN_VISITSTATUS,COLUMN_VISITDATE};
         String sqlTables = TABLE_LIST;
+        String where = COLUMN_VISITSTATUS + "=?";
+        String[] whereArgs = {"Y"};
         qb.setTables(sqlTables);
         Cursor d = qb.query(db,
                 listLandmark,
-                null,
-                null,
+                where,
+                whereArgs,
                 null,
                 null,
                 null);
@@ -245,33 +331,13 @@ public class DatabaseManager {
             i++;
             d.moveToNext();
         }
+        Log.e("Query","Update Completed");
         return listIds;
     }
 
-
-
-    public Cursor getLandmarkContents(String landmark){
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        String[] Landmark = new String[]{COLUMN_LANDMARKID,COLUMN_LANDMARKNAME,COLUMN_CITY,COLUMN_COUNTRY_ID,COLUMN_DESC};
-        String sqlTables = TABLE_LANDMARK;
-        String selection = COLUMN_LANDMARKNAME + "=?";
-        String[] selectionArgs = {landmark};
-
-        qb.setTables(sqlTables);
-
-        return qb.query(db,
-                Landmark,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null);
-    }
-
+    //update visit_status of the landmark passed
     public void updateList(String name){
         int Lid = getLandmarkId(name);
-
-        //update status of landmark
         ContentValues val = new ContentValues();
         val.put(COLUMN_VISITSTATUS, "Y");
 
@@ -284,9 +350,9 @@ public class DatabaseManager {
                 val,
                 where,
                 whereArgs);
-        Log.e("Query","Update Completed");
     }
 
+    //delete landmark from user's list
     public void deleteLandmark(String name){
         //get Id of landmark
         int lId = getLandmarkId(name);
@@ -294,7 +360,6 @@ public class DatabaseManager {
         String where = COLUMN_lANDMARK_ID + " LIKE ? ";
         String[] whereArgs = {String.valueOf(lId)};
         db.delete(TABLE_LIST, where, whereArgs);
-        Log.e("Query","Delete Completed");
 
     }
 
@@ -313,25 +378,6 @@ public class DatabaseManager {
                 null,
                 null,
                 null);
-    }
-
-    public String getLandmarkStatus(String name)
-    {
-        int Lid = getLandmarkId(name);
-        SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
-        String[] listLandmark = new String[]{COLUMN_lANDMARK_ID,COLUMN_VISITSTATUS,COLUMN_VISITDATE};
-        String sqlTables = TABLE_LIST;
-        String where = COLUMN_lANDMARK_ID + " = " + String.valueOf(Lid);
-        qb.setTables(sqlTables);
-        Cursor d = qb.query(db,
-                listLandmark,
-                where,
-                null,
-                null,
-                null,
-                null);
-        d.moveToFirst();
-        return d.getString(1);
     }
 
 }

@@ -17,13 +17,16 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static java.security.AccessController.getContext;
-
+//this is the home page of the app
 public class MainActivity extends AppCompatActivity {
 
     Button landmarkBtn;
@@ -35,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
     String input;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        searchTxt = (EditText)findViewById(R.id.inputtext);
 
+        searchTxt = (EditText)findViewById(R.id.inputtext);
+        //thi
         landmarkBtn = (Button)findViewById(R.id.btn);
         landmarkBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -52,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
         countryBtn = (Button)findViewById(R.id.CountryBtn);
         countryBtn.setOnClickListener(new View.OnClickListener()
@@ -72,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button visitBtn = (Button)findViewById(R.id.viewBtn);
+        visitBtn.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v){
+                Intent listintent = new Intent(getApplicationContext(),landmarkActivity.class);
+                startActivity(listintent);
+            }
+        });
 
 
     }

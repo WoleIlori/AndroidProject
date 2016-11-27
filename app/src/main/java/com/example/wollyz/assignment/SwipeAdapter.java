@@ -1,6 +1,7 @@
 package com.example.wollyz.assignment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
@@ -60,6 +61,7 @@ public class SwipeAdapter extends PagerAdapter {
                 db.addLandmarkToList(name.get(position));
             }
         });
+
         container.addView(item_view);
         return item_view;
     }

@@ -20,6 +20,7 @@ public class LandmarkPageActivity extends Activity {
     private Cursor cursor;
     private DatabaseManager db;
     private String name;
+
     private int[] imageid = new int[]{
             R.drawable.great_wall_of_china,
             R.drawable.forbidden_city,
@@ -43,13 +44,10 @@ public class LandmarkPageActivity extends Activity {
 
         ImageView landmark_pic = (ImageView)findViewById(R.id.image_view);
         Button addBtn = (Button)findViewById(R.id.Button);
-        //title = (TextView)findViewById(R.id.text);
         Bundle b = getIntent().getExtras();
-        name = b.getString("landmark");
-        /*
-        name = db.getLandmarkByName(b.getString("landmark"));
-        title.setText(name);
-        */
+        name= b.getString("landmark");
+
+        //getting the image of the Landmark searched
         cursor = db.getAllLandmarks();
         cursor.moveToFirst();
         int i=0;

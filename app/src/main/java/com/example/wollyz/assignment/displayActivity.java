@@ -32,6 +32,7 @@ public class displayActivity extends Activity {
         String name = var.getString("LandmarkName");
         viewPager =(ViewPager)findViewById(R.id.view_pager);
 
+        //storing the r.drawable of
         switch(name){
             case "China":
             {

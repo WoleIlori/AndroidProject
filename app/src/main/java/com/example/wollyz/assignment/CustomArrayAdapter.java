@@ -14,12 +14,14 @@ import java.util.ArrayList;
 /**
  * Created by Wollyz on 18/11/2016.
  */
+
+
 public class CustomArrayAdapter extends ArrayAdapter<String> {
     private int[] imgid;
-    private ArrayList<String> landmarks;
+    private String[] landmarks;
     private Context context;
 
-    public CustomArrayAdapter(Context context, ArrayList<String> name, int[] imageId )
+    public CustomArrayAdapter(Context context, String[] name, int[] imageId )
     {
         super(context, R.layout.landmark_row, name);
         this.context = context;
@@ -32,8 +34,7 @@ public class CustomArrayAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.landmark_row, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
         TextView name = (TextView) rowView.findViewById(R.id.landmarkname);
-
-        name.setText(landmarks.get(position));
+        name.setText(landmarks[position]);
         imageView.setImageResource(imgid[position]);
         return rowView;
 
